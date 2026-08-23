@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { LogOut, Package, Search, ShoppingCartIcon, User } from 'lucide-react'
+import { LogOut, Package, Search, ShoppingCartIcon, User, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import { signOut } from 'next-auth/react'
@@ -19,6 +19,7 @@ interface IUser {
 function Nav({ user }: { user: IUser }) {
     const [search, setSearch] = useState("")
     const [open, setOpen] = useState(false)
+    const [searchOpen, setSearchOpen] = useState(false) // Mobile search toggle state
     const profileDropDown = useRef<HTMLDivElement>(null)
 
     // Close dropdown when clicking outside
@@ -40,7 +41,7 @@ function Nav({ user }: { user: IUser }) {
                 Snapcart
             </Link>
 
-            {/* Search Bar */}
+            {/* Desktop Search Bar */}
             <form onSubmit={(e) => e.preventDefault()} className='hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md'>
                 <Search className='text-gray-400 w-5 h-5 mr-2' />
                 <input 
@@ -52,9 +53,17 @@ function Nav({ user }: { user: IUser }) {
                 />
             </form>
 
-            {/* Right Actions (Cart & Profile) */}
-            <div className='flex items-center gap-3 md:gap-5 relative'>
+            {/* Right Actions (Search Icon for Mobile, Cart & Profile) */}
+            <div className='flex items-center gap-2 sm:gap-3 md:gap-5 relative'>
                 
+                {/* Mobile Search Icon Button */}
+                <button 
+                    onClick={() => setSearchOpen(prev => !prev)} 
+                    className='md:hidden bg-white/10 hover:bg-white/20 text-white rounded-full w-11 h-11 flex items-center justify-center shadow-md transition'
+                >
+                    <Search className='w-5 h-5' />
+                </button>
+
                 {/* Cart Icon */}
                 <Link href={"/cart"} className='relative bg-white/10 hover:bg-white/20 text-white rounded-full w-11 h-11 flex items-center justify-center shadow-md transition'>
                     <ShoppingCartIcon className='w-5 h-5' />
@@ -105,7 +114,7 @@ function Nav({ user }: { user: IUser }) {
                                     {user?.role === "user" && (
                                         <Link 
                                             href={"/user/my-orders"} 
-                                            className='flex items-center gap-3 px-3 py-2.5 hover:bg-green-50 rounded-xl text-gray-700 font-medium text-sm transition-colors' 
+                                            className='flex items-center gap-3 px-3 py-2.5 hover:bg-green-50 icon-hover rounded-xl text-gray-700 font-medium text-sm transition-colors' 
                                             onClick={() => setOpen(false)}
                                         >
                                             <Package className='w-4 h-4 text-green-600' />
@@ -129,6 +138,33 @@ function Nav({ user }: { user: IUser }) {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Mobile Search Overlay / Dropdown */}
+            <AnimatePresence>
+                {searchOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className='absolute top-24 left-0 w-full px-4 md:hidden z-40'
+                    >
+                        <div className='flex items-center bg-white rounded-2xl px-4 py-3 shadow-xl border border-gray-100'>
+                            <Search className='text-gray-400 w-5 h-5 mr-2 shrink-0' />
+                            <input 
+                                type="text" 
+                                placeholder='Search groceries...' 
+                                className='w-full outline-none text-gray-700 placeholder-gray-400 text-sm font-medium bg-transparent' 
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                autoFocus
+                            />
+                            <button onClick={() => setSearchOpen(false)} className='ml-2 text-gray-500 hover:text-gray-700'>
+                                <X className='w-5 h-5' />
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </nav>
     )
 }

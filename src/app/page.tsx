@@ -1,7 +1,10 @@
 
 import { auth } from '@/auth'
+import AdminDashboard from '@/components/AdminDashboard'
+import Delivery from '@/components/Delivery'
 import EditRoleMobile from '@/components/EditRoleMobile'
 import Nav from '@/components/Nav'
+import UserDashboard from '@/components/UserDashboard'
 import connectDb from '@/lib/db'
 import User from '@/models/userModel'
 import { redirect } from 'next/navigation'
@@ -22,9 +25,17 @@ async function Home() {
   if(inComplete) {
     return <EditRoleMobile />
   }
+
+  const plainUser = JSON.parse(JSON.stringify(user))
   return (
     <div>
-      <Nav user = {user}/>
+      <Nav user = {plainUser}/>
+
+      {user.role == "User"?(
+        <UserDashboard />
+      ):user.role == "Admin"? (
+        <AdminDashboard /> 
+      ):<Delivery />}
     </div>
   )
 }
