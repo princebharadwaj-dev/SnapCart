@@ -22,6 +22,21 @@ export async function proxy(req: NextRequest) {
         return NextResponse.redirect(loginUrl);
     }
 
+    const role = token.role
+    if(pathname.startsWith("/user") && role!=="User") {
+        return NextResponse.redirect(new URL("/unauthorized",req.url))
+    }
+
+    if(pathname.startsWith("/delivery") && role!=="Delivery Boy") {
+        return NextResponse.redirect(new URL("/unauthorized",req.url))
+    }
+
+    if(pathname.startsWith("/admin") && role!=="Admin") {
+        return NextResponse.redirect(new URL("/unauthorized",req.url))
+    }
+
+
+
     return NextResponse.next();
 }
 
