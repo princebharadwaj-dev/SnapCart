@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Zap, Clock, ShoppingCart, ArrowRight, ShieldCheck, Bike } from 'lucide-react'
+import { useSelector } from 'react-redux'
+import { RootState } from '@reduxjs/toolkit/query'
+
 
 // 1. 10-Min Quick Commerce Specific Slides & HD Images
 const heroSlides = [
@@ -41,6 +44,8 @@ const heroSlides = [
 ]
 
 export default function QuickCommerceHero() {
+  const {userData} = useSelector((state:RootState) => state.user)
+console.log(userData)
   const [current, setCurrent] = useState(0)
   const slideDuration = 5000 // 5 seconds
 

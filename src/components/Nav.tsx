@@ -6,6 +6,9 @@ import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import { signOut } from 'next-auth/react'
 import { createPortal } from 'react-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+
 
 interface IUser {
     _id?: string
@@ -24,7 +27,7 @@ function Nav({ user }: { user: IUser }) {
     const [menuOpen, setMenuOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false) // Mobile search toggle state
     const profileDropDown = useRef<HTMLDivElement>(null)
-
+       const {cartData}=useSelector((state:RootState)=>state.cart)
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -103,7 +106,7 @@ function Nav({ user }: { user: IUser }) {
 
                     <Link href={"/user/cart"} className='relative bg-white rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition'>
                         <ShoppingCartIcon className='text-green-600 w-6 h-6' />
-                        <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-semibold shadow'>0</span>
+                        <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-semibold shadow'>{cartData.length}</span>
                     </Link></>}
 
                 {user.role == "Admin" && <>
