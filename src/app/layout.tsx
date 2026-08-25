@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
-      <body className="w-full min-h-screen bg-linear-to-b from-green-100">
+      <body className="w-full h-[200vh] bg-linear-to-b from-green-100">
        <Provider>
           {children}
        </Provider>

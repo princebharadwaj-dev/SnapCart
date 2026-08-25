@@ -8,7 +8,7 @@ export async function POST(req:NextRequest) {
     try {
         await connectDb()
         const session = await auth()
-        if(session?.user?.role !== "admin"){
+        if(session?.user?.role !== "Admin"){
             return NextResponse.json(
                 {message:"You are not Admin"},
                 {status:400}
